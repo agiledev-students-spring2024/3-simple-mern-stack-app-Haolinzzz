@@ -78,5 +78,21 @@ app.post('/messages/save', async (req, res) => {
   }
 })
 
+// JSON data
+const aboutData = {
+  title: "About Us",
+  content: [
+    "Welcome to my new about us page!",
+    "I'm Haolin Zhong",
+    "Senior in NYU, joint major in Computer Science and Mathematics"
+  ],
+  imageUrl: "https://media.discordapp.net/attachments/513375996045688832/1034835063046688848/d2339b3.jpg" // https://liquipedia.net/apexlegends/File:Horizon_Banner.png
+};
+
+app.get('/aboutus', (req, res) => {
+  res.json(aboutData);
+});
+
+
 // export the express app we created to make it available to other modules
 module.exports = app // CommonJS export style!

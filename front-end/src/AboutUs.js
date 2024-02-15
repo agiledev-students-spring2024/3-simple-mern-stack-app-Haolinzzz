@@ -24,18 +24,56 @@
 //   export default AboutUs;
 
 import './AboutUs.css'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 
 const AboutUs = props => {
-  return (
-    <>
-      {/* <h1>About Us Page</h1> */}
-      <p>This is my new page</p>
-      <p>
-        Hi, my name is Haolin, a current senior student in NYU, joint major in Computer Science and Math.
-      </p>
-    </>
-  )
-}
+    const [aboutData, setAboutData] = useState({ title: '', content: [], imageUrl: '' });
+    const [error, setError] = useState('');
+    const [loaded, setLoaded] = useState(false);
+
+    const fetchAboutUs = () => {
+        axios.get(`${process.env.REACT_APP_SERVER_HOSTNAME}/aboutus`)
+        .then(response => {
+    
+          const aboutData = response.data;
+          setAboutData(aboutData);
+        })
+        .catch(err => {
+          // Convert error object to a string to display it
+          // Note: In a real app, you might want to handle errors more gracefully
+          const errMsg = JSON.stringify(err, null, 2);
+          setError(errMsg);
+        })
+        .finally(() => {
+          // Indicate that loading is complete
+          setLoaded(true);
+        });
+    }
+
+    useEffect(() => {
+        fetchAboutUs();
+    }, []);
+
+    return (
+        <div>
+          {!loaded && <p>Loading...</p>}
+          {error && <p>Error: {error}</p>}
+          {loaded && !error && (
+            <div>
+              <h1>{aboutData.title}</h1>
+              {aboutData.content.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+              <img src={aboutData.imageUrl} alt="About Us" />
+            </div>
+          )}
+        </div>
+      );
+};
 
 
-export default AboutUs
+
+
+
+export default AboutUs;
